@@ -5,19 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/02 11:55:16 by mcombeau          #+#    #+#             */
-/*   Updated: 2024/08/22 23:27:54 by jyap             ###   ########.fr       */
+/*   Created: 2024/08/29 13:36:41 by jyap              #+#    #+#             */
+/*   Updated: 2024/08/29 16:05:46 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
-/* contains_only_digits:
-*	Checks if a string contains only digits 0 - 9.
-*	Returns 1 if the string only contains digits.
-*	Returns 0 if the string contains a character that is not a digit.
-*/
-static int	contains_only_digits(char *str)
+static bool	contains_only_digits(char *str)
 {
 	int	i;
 
@@ -25,27 +20,22 @@ static int	contains_only_digits(char *str)
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
-			return (0);
+			return (false);
 		i++;
 	}
-	return (1);
+	return (true);
 }
 
-/* integer_atoi:
-*	Converts a digit-only string into a positive integer.
-*	Returns the converted number between 0 and INT MAX.
-*	Returns -1 if the converted number exceeds INT MAX.
-*/
 int	integer_atoi(char *str)
 {
-	long	nb;
-	int		i;
+	unsigned long	nb;
+	int				i;
 
 	i = 0;
 	nb = 0;
 	while (str[i])
 		i++;
-	if (i >= 11)
+	if (i > 10)
 		return (-1);
 	i = 0;
 	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
@@ -58,13 +48,7 @@ int	integer_atoi(char *str)
 	return ((int)nb);
 }
 
-/* is_valid_input:
-*	Checks if all required arguments are valid, i.e. is a string of
-*	digits only, which does not exceed INT MAX. Also checks if the number
-*	of philosophers is valid (between 1 and MAX_PHILOS).
-*	Returns 1 if all arguments are valid, 0 if one of them is invalid.
-*/
-int	is_valid_input(int ac, char **av)
+bool	is_valid_input(int ac, char **av)
 {
 	int	i;
 	int	nb;
@@ -73,13 +57,13 @@ int	is_valid_input(int ac, char **av)
 	while (i < ac)
 	{
 		if (!contains_only_digits(av[i]))
-			return (msg(STR_ERR_INPUT_DIGIT, av[i], 0));
+			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
 		nb = integer_atoi(av[i]);
 		if (i == 1 && (nb <= 0 || nb > MAX_PHILOS))
-			return (msg(STR_ERR_INPUT_POFLOW, STR_MAX_PHILOS, 0));
+			return (msg(STR_ERR_INPUT_POFLOW, STR_MAX_PHILOS, false));
 		if (i != 1 && nb == -1)
-			return (msg(STR_ERR_INPUT_DIGIT, av[i], 0));
+			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
 		i++;
 	}
-	return (1);
+	return (true);
 }

@@ -5,51 +5,49 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/22 22:40:19 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/22 23:02:46 by jyap             ###   ########.fr       */
+/*   Created: 2024/08/29 13:35:47 by jyap              #+#    #+#             */
+/*   Updated: 2024/08/29 16:04:04 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
-void	*free_table(t_table *t)
+void	free_table(t_table *table)
 {
 	int	i;
 
-	if (!t)
-		return (NULL);
-	if (t->fork_locks != NULL)
-		free(t->fork_locks);
-	if (t->philos != NULL)
+	if (!table)
+		return ;
+	if (table->fork_locks != NULL)
+		free(table->fork_locks);
+	if (table->philos != NULL)
 	{
 		i = 0;
-		while (i < t->n_philos)
+		while (i < table->n_philos)
 		{
-			if (t->philos[i] != NULL)
-				free(t->philos[i]);
+			if (table->philos[i] != NULL)
+				free(table->philos[i]);
 			i++;
 		}
-		free(t->philos);
+		free(table->philos);
 	}
-	free(t);
-	return (NULL);
+	free(table);
 }
 
-void	destroy_mutexes(t_table *t)
+void	destroy_mutexes(t_table *table)
 {
 	int	i;
 
 	i = 0;
-	while (i < t->n_philos)
+	while (i < table->n_philos)
 	{
-		pthread_mutex_destroy(&t->fork_locks[i]);
-		pthread_mutex_destroy(&t->philos[i]->meal_time_lock);
+		pthread_mutex_destroy(&table->fork_locks[i]);
+		pthread_mutex_destroy(&table->philos[i]->meal_time_lock);
 		i++;
 	}
-	pthread_mutex_destroy(&t->write_lock);
-	pthread_mutex_destroy(&t->sim_stop_lock);
+	pthread_mutex_destroy(&table->write_lock);
+	pthread_mutex_destroy(&table->sim_stop_lock);
 }
-
 
 int	msg(char *str, char *detail, int exit_no)
 {
@@ -60,17 +58,17 @@ int	msg(char *str, char *detail, int exit_no)
 	return (exit_no);
 }
 
-int	error_failure(char *str, char *details, t_table *t)
+int	error_failure(char *str, char *details, t_table *table)
 {
-	if (t != NULL)
-		free_table(t);
+	if (table != NULL)
+		free_table(table);
 	return (msg(str, details, 0));
 }
 
-void	*error_null(char *str, char *details, t_table *t)
+void	*error_null(char *str, char *details, t_table *table)
 {
-	if (t != NULL)
-		free_table(t);
+	if (table != NULL)
+		free_table(table);
 	msg(str, details, EXIT_FAILURE);
 	return (NULL);
 }
