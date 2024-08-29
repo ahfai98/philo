@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 13:35:57 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 16:07:11 by jyap             ###   ########.fr       */
+/*   Updated: 2024/08/29 17:22:06 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef enum e_status
 
 //	parsing.c
 bool			is_valid_input(int ac, char **av);
-int				integer_atoi(char *str);
+int				ft_atoi(char *str);
 
 //	init.c
 t_table			*init_table(int ac, char **av, int i);
@@ -104,4 +104,6 @@ int				error_failure(char *str, char *details, t_table *table);
 void			free_table(t_table *table);
 void			destroy_mutexes(t_table *table);
 
+//	utils.c
+void			assign_forks(t_philo *philo);
 #endif

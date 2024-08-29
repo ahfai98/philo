@@ -13,6 +13,7 @@ SRC		=	main.c \
 			philosopher.c \
 			init.c \
 			output.c \
+			utils.c \
 			exit.c
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)

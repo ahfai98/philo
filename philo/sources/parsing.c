@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 13:36:41 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 16:05:46 by jyap             ###   ########.fr       */
+/*   Updated: 2024/08/29 16:58:39 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static bool	contains_only_digits(char *str)
 	return (true);
 }
 
-int	integer_atoi(char *str)
+int	ft_atoi(char *str)
 {
 	unsigned long	nb;
 	int				i;
@@ -58,7 +58,7 @@ bool	is_valid_input(int ac, char **av)
 	{
 		if (!contains_only_digits(av[i]))
 			return (msg(STR_ERR_INPUT_DIGIT, av[i], false));
-		nb = integer_atoi(av[i]);
+		nb = ft_atoi(av[i]);
 		if (i == 1 && (nb <= 0 || nb > MAX_PHILOS))
 			return (msg(STR_ERR_INPUT_POFLOW, STR_MAX_PHILOS, false));
 		if (i != 1 && nb == -1)
