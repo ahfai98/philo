@@ -12,17 +12,6 @@
 
 #include "philo_bonus.h"
 
-void	cleanup(t_philo *philo)
-{
-	sem_close(philo->fork);
-	sem_close(philo->full);
-	sem_close(philo->write);
-	sem_unlink("fork");
-	sem_unlink("full");
-	sem_unlink("write");
-	free(philo->pid);
-}
-
 /* Start of the main function */
 int	main(int ac, char **av)
 {

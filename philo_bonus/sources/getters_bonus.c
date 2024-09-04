@@ -19,7 +19,7 @@ void	get_message(t_philo *philo, int i, char *str, int end)
 
 	time = get_time(philo->start_time);
 	sem_wait(philo->write);
-	printf("%d %d %s\n", time, i, str);
+	printf("%d\t%d %s\n", time, i, str);
 	if (end != 1)
 		sem_post(philo->write);
 }

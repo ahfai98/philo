@@ -92,21 +92,3 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	output[j] = '\0';
 	return (output);
 }
-
-/* Finishes the simulation and exits the program cleanly */
-void	finish_and_exit(t_philo *philo)
-{
-	waitpid(-1, NULL, 0);
-	free(philo->pid);
-	kill(0, SIGINT);
-}
-
-void	sem_cleanup(t_philo *philo)
-{
-	sem_close(philo->end);
-	sem_close(philo->full);
-	sem_close(philo->write);
-	sem_unlink("end");
-	sem_unlink("full");
-	sem_unlink("write");
-}

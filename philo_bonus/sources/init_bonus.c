@@ -62,23 +62,16 @@ int	init_philo(t_philo *philo, t_table table)
 	philo->last_ate = philo->start_time;
 	philo->table = table;
 	philo->n = 1;
-	while (philo->n <= table.n_philos)
+	while (philo->n -1 < table.n_philos)
 	{
-		philo->pid[philo->n] = fork();
-		if (philo->pid[philo->n] == -1)
+		philo->pid[philo->n - 1] = fork();
+		if (philo->pid[philo->n - 1] == -1)
 			return (msg(STR_ERR_FORK, NULL, 1));
-		if (philo->pid[philo->n] == 0)
+		if (philo->pid[philo->n - 1] == 0)
 			routine(philo);
 		philo->n++;
 	}
-	if (philo->table.must_eat_count != -2)
-	{
-		check_stomach_and_death(philo, table);
-		return (0);
-	}
-	waitpid(-1, NULL, 0);
-	sem_cleanup(philo);
-	free(philo->pid);
-	kill(0, SIGINT);
+	check_stomach_and_death(philo, table);
+	finish_and_exit(philo);
 	return (0);
 }

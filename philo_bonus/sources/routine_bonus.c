@@ -51,7 +51,10 @@ static void	*cleanup(void *args)
 	sem_unlink(sem_name);
 	free(philo_id);
 	free(sem_name);
-	exit(0);
+	sem_cleanup(philo);
+	free(philo->pid);
+	usleep(1000);
+	kill(0, SIGINT);
 	return (NULL);
 }
 
@@ -116,26 +119,4 @@ void	routine(t_philo *philo)
 		eat_sleep(philo);
 		think_before_eat(philo);
 	}
-}
-
-/* Waits when max_eat has reached <= 0, then finish and exit per philosopher */
-
-void	check_stomach_and_death(t_philo *philo, t_table table)
-{
-	int		i;
-
-	i = -1;
-	philo->stomach_process = fork();
-	if (philo->stomach_process != 0)
-		return ;
-	while (i++ < table.n_philos)
-		sem_wait(philo->full);
-	sem_wait(philo->write);
-	while (i-- > 0)
-		sem_post(philo->end);
-	usleep(100);
-	waitpid(-1, NULL, 0);
-	sem_cleanup(philo);
-	free(philo->pid);
-	kill(0, SIGINT);
 }

@@ -14,7 +14,7 @@
 
 static void	print_status(t_philo *philo, char *str)
 {
-	printf("%d %d %s\n", get_time_in_ms() - philo->table->start_time,
+	printf("%d\t%d %s\n", get_time_in_ms() - philo->table->start_time,
 		philo->id + 1, str);
 }
 

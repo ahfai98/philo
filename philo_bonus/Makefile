@@ -12,7 +12,8 @@ SRC		=	main_bonus.c \
 			getters_bonus.c \
 			init_bonus.c \
 			time_bonus.c \
-			utils_bonus.c
+			utils_bonus.c \
+			utils2_bonus.c
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)
 OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))
