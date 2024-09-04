@@ -42,7 +42,5 @@ int	main(int ac, char **av)
 		free(philo.pid);
 		return (1);
 	}
-	cleanup(&philo);
-	free(philo.pid);
 	return (0);
 }

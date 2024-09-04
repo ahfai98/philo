@@ -28,6 +28,7 @@ void	init_arg(t_table *table, int ac, char **av)
 int	create_sema(sem_t **sem, char *name, int count)
 {
 	sem_unlink(name);
+	sem_close(*sem);
 	*sem = NULL;
 	*sem = sem_open(name, O_CREAT, S_IRWXU, count);
 	return (*sem == SEM_FAILED);
@@ -40,8 +41,9 @@ static int	init_sema(t_philo *philo, t_table table)
 
 	ret = 0;
 	ret += create_sema(&philo->fork, "fork", table.n_philos);
-	ret += create_sema(&philo->full, "full", 1);
+	ret += create_sema(&philo->full, "full", 0);
 	ret += create_sema(&philo->write, "write", 1);
+	ret += create_sema(&philo->end, "end", 0);
 	return (ret);
 }
 
@@ -70,7 +72,13 @@ int	init_philo(t_philo *philo, t_table table)
 		philo->n++;
 	}
 	if (philo->table.must_eat_count != -2)
-		check_stomach(philo, table);
-	finish_and_exit(philo);
+	{
+		check_stomach_and_death(philo, table);
+		return (0);
+	}
+	waitpid(-1, NULL, 0);
+	sem_cleanup(philo);
+	free(philo->pid);
+	kill(0, SIGINT);
 	return (0);
 }

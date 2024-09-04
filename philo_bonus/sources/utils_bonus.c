@@ -100,3 +100,13 @@ void	finish_and_exit(t_philo *philo)
 	free(philo->pid);
 	kill(0, SIGINT);
 }
+
+void	sem_cleanup(t_philo *philo)
+{
+	sem_close(philo->end);
+	sem_close(philo->full);
+	sem_close(philo->write);
+	sem_unlink("end");
+	sem_unlink("full");
+	sem_unlink("write");
+}

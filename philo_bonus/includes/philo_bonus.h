@@ -61,8 +61,10 @@ typedef struct s_philo
 	sem_t			*full;
 	sem_t			*read;
 	sem_t			*write;
+	sem_t			*end;
 	t_table			table;
 	pthread_t		death_thread;
+	pthread_t		cleanup_thread;
 	pid_t			stomach_process;
 	struct timeval	start_time;
 	struct timeval	last_ate;
@@ -87,10 +89,11 @@ void			get_message(t_philo *philo, int i, char *str, int end);
 /* Philosophizing */
 void			routine(t_philo *philo);
 void			finish_and_exit(t_philo *philo);
-int				check_stomach(t_philo *philo, t_table table);
 bool			is_valid_input(int ac, char **av);
 int				msg(char *str, char *detail, int exit_no);
 int				get_time_in_ms(struct timeval *time);
 void			sim_start_delay(int start_time);
+void			sem_cleanup(t_philo *philo);
+void			check_stomach_and_death(t_philo *philo, t_table table);
 
 #endif

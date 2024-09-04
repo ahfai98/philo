@@ -28,11 +28,30 @@ static void	*check_death(void *args)
 		if (now > philo->table.time_to_die)
 		{
 			get_message(philo, philo->n, "died", 1);
+			while (philo->table.n_philos-- > 0)
+				sem_post(philo->end);
 			break ;
 		}
 		ft_usleep(100);
 	}
-	finish_and_exit(philo);
+	return (NULL);
+}
+
+static void	*cleanup(void *args)
+{
+	t_philo	*philo;
+	char	*philo_id;
+	char	*sem_name;
+
+	philo = args;
+	sem_wait(philo->end);
+	philo_id = ft_itoa(philo->n);
+	sem_name = ft_strjoin("read", philo_id);
+	sem_close(philo->read);
+	sem_unlink(sem_name);
+	free(philo_id);
+	free(sem_name);
+	exit(0);
 	return (NULL);
 }
 
@@ -87,6 +106,8 @@ void	routine(t_philo *philo)
 	free(sem_name);
 	pthread_create(&philo->death_thread, NULL, &check_death, philo);
 	pthread_detach(philo->death_thread);
+	pthread_create(&philo->cleanup_thread, NULL, &cleanup, philo);
+	pthread_detach(philo->death_thread);
 	sim_start_delay(get_time_in_ms(&philo->start_time));
 	if (philo->n % 2 == 0)
 		ft_usleep(1);
@@ -98,16 +119,23 @@ void	routine(t_philo *philo)
 }
 
 /* Waits when max_eat has reached <= 0, then finish and exit per philosopher */
-int	check_stomach(t_philo *philo, t_table table)
+
+void	check_stomach_and_death(t_philo *philo, t_table table)
 {
 	int		i;
+
+	i = -1;
 	philo->stomach_process = fork();
 	if (philo->stomach_process != 0)
 		return ;
-	i = -1;
-	while (i++ < table.n_philos + 1)
+	while (i++ < table.n_philos)
 		sem_wait(philo->full);
-	//sem_wait(philo->write);
-	finish_and_exit(philo);
-	return (0);
+	sem_wait(philo->write);
+	while (i-- > 0)
+		sem_post(philo->end);
+	usleep(100);
+	waitpid(-1, NULL, 0);
+	sem_cleanup(philo);
+	free(philo->pid);
+	kill(0, SIGINT);
 }
