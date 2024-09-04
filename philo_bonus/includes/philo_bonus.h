@@ -82,13 +82,12 @@ int				create_sema(sem_t **sem, char *name, int count);
 /* Getters */
 struct timeval	get_starttime(void *timezone);
 int				get_time(struct timeval old);
-void			get_message(t_philo *philo, int i, char *str);
+void			get_message(t_philo *philo, int i, char *str, int end);
 
 /* Philosophizing */
 void			routine(t_philo *philo);
 void			finish_and_exit(t_philo *philo);
-void			check_stomach(t_philo *philo, t_table table);
-
+int				check_stomach(t_philo *philo, t_table table);
 bool			is_valid_input(int ac, char **av);
 int				msg(char *str, char *detail, int exit_no);
 int				get_time_in_ms(struct timeval *time);

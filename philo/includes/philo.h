@@ -42,7 +42,7 @@ typedef struct s_table
 {
 	int				start_time;
 	int				n_philos;
-	pthread_t		grim_reaper;
+	pthread_t		end_thread;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -95,8 +95,8 @@ void			write_outcome(t_table *table);
 void			*error_null(char *str, char *details, t_table *table);
 int				msg(char *str, char *detail, int exit_no);
 
-//	grim_reaper.c
-void			*grim_reaper(void *data);
+//	check_end.c
+void			*check_end(void *data);
 bool			has_sim_stopped(t_table *table);
 
 //	exit.c

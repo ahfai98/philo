@@ -1,7 +1,7 @@
 NAME	= philo_bonus
 CC		= cc
 CFLAGS	= -Werror -Wall -Wextra -pthread
-CFLAGS	+= -D DEBUG_FORMATTING=1 -fsanitize=thread -g
+CFLAGS	+= -g
 
 SRC_PATH = sources/
 OBJ_PATH = objects/

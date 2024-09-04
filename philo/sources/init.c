@@ -78,6 +78,7 @@ static t_philo	**init_philosophers(t_table *table)
 		philos[i]->table = table;
 		philos[i]->id = i;
 		philos[i]->times_ate = 0;
+		philos[i]->last_meal = 0;
 		assign_forks(philos[i]);
 	}
 	return (philos);

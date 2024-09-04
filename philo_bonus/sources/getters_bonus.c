@@ -13,12 +13,13 @@
 #include "philo_bonus.h"
 
 /* Prints out messages based on events */
-void	get_message(t_philo *philo, int i, char *str)
+void	get_message(t_philo *philo, int i, char *str, int end)
 {
 	int	time;
 
 	time = get_time(philo->start_time);
 	sem_wait(philo->write);
-	printf("%d\t %d %s\n", time, i, str);
-	sem_post(philo->write);
+	printf("%d %d %s\n", time, i, str);
+	if (end != 1)
+		sem_post(philo->write);
 }

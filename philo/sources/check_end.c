@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   grim_reaper.c                                      :+:      :+:    :+:   */
+/*   check_end.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -72,7 +72,7 @@ static bool	end_condition_reached(t_table *table)
 	return (false);
 }
 
-void	*grim_reaper(void *data)
+void	*check_end(void *data)
 {
 	t_table			*table;
 

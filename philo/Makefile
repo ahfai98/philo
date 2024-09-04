@@ -1,14 +1,14 @@
 NAME	= philo
 CC		= cc
 CFLAGS	= -Werror -Wall -Wextra -pthread
-#CFLAGS	+= -fsanitize=thread -g
+CFLAGS	+= -g
 
 SRC_PATH = sources/
 OBJ_PATH = objects/
 
 SRC		=	main.c \
 			parsing.c \
-			grim_reaper.c \
+			check_end.c \
 			time.c \
 			philosopher.c \
 			init.c \

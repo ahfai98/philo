@@ -27,7 +27,7 @@ static void	*check_death(void *args)
 		sem_post(philo->read);
 		if (now > philo->table.time_to_die)
 		{
-			get_message(philo, philo->n, "died");
+			get_message(philo, philo->n, "died", 1);
 			break ;
 		}
 		ft_usleep(100);
@@ -37,16 +37,16 @@ static void	*check_death(void *args)
 }
 
 /* Resets philosopher's last ate time and reduce its max eat by one each eat */
-static void	eat(t_philo *philo)
+static void	eat_sleep(t_philo *philo)
 {
 	sem_wait(philo->fork);
-	get_message(philo, philo->n, "has taken a fork");
+	get_message(philo, philo->n, "has taken a fork", 0);
 	sem_wait(philo->fork);
-	get_message(philo, philo->n, "has taken a fork");
+	get_message(philo, philo->n, "has taken a fork", 0);
 	sem_wait(philo->read);
 	gettimeofday(&philo->last_ate, NULL);
 	sem_post(philo->read);
-	get_message(philo, philo->n, "is eating");
+	get_message(philo, philo->n, "is eating", 0);
 	if (philo->table.must_eat_count != -2)
 	{
 		philo->table.must_eat_count--;
@@ -54,6 +54,24 @@ static void	eat(t_philo *philo)
 			sem_post(philo->full);
 	}
 	ft_usleep(philo->table.time_to_eat);
+	sem_post(philo->fork);
+	sem_post(philo->fork);
+	get_message(philo, philo->n, "is sleeping", 0);
+	ft_usleep(philo->table.time_to_sleep);
+	get_message(philo, philo->n, "is thinking", 0);
+}
+
+static void	think_before_eat(t_philo *philo)
+{
+	int	time_to_think;
+
+	sem_wait(philo->read);
+	time_to_think = (philo->table.time_to_die
+			- (get_time(philo->last_ate))) / 4;
+	sem_post(philo->read);
+	if (time_to_think > 200)
+		time_to_think = 200;
+	ft_usleep(time_to_think);
 }
 
 /* The routine each philosopher has to go through for the rest of their lives */
@@ -74,37 +92,22 @@ void	routine(t_philo *philo)
 		ft_usleep(1);
 	while (1)
 	{
-		eat(philo);
-		sem_post(philo->fork);
-		sem_post(philo->fork);
-		get_message(philo, philo->n, "is sleeping");
-		ft_usleep(philo->table.time_to_sleep);
-		get_message(philo, philo->n, "is thinking");
+		eat_sleep(philo);
+		think_before_eat(philo);
 	}
 }
 
 /* Waits when max_eat has reached <= 0, then finish and exit per philosopher */
-void	check_stomach(t_philo *philo, t_table table)
+int	check_stomach(t_philo *philo, t_table table)
 {
 	int		i;
-
-	if (philo->table.must_eat_count != -2)
-	{
-		philo->stomach_process = fork();
-		if (philo->stomach_process != 0)
-			return ;
-		i = -1;
-		while (i++ < table.n_philos)
-			sem_wait(philo->full);
-		sem_wait(philo->write);
-		finish_and_exit(philo);
-	}
-}
-
-/* Finishes the simulation and exits the program cleanly */
-void	finish_and_exit(t_philo *philo)
-{
-	waitpid(-1, NULL, 0);
-	free(philo->pid);
-	kill(0, SIGINT);
+	philo->stomach_process = fork();
+	if (philo->stomach_process != 0)
+		return ;
+	i = -1;
+	while (i++ < table.n_philos + 1)
+		sem_wait(philo->full);
+	//sem_wait(philo->write);
+	finish_and_exit(philo);
+	return (0);
 }

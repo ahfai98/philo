@@ -27,8 +27,8 @@ static bool	start_sim(t_table *table)
 	}
 	if (table->n_philos > 1)
 	{
-		if (pthread_create(&table->grim_reaper, NULL,
-				&grim_reaper, table) != 0)
+		if (pthread_create(&table->end_thread, NULL,
+				&check_end, table) != 0)
 			return (error_failure(STR_ERR_THREAD, NULL, table));
 	}
 	return (true);
@@ -45,7 +45,7 @@ static void	stop_sim(t_table *table)
 		i++;
 	}
 	if (table->n_philos > 1)
-		pthread_join(table->grim_reaper, NULL);
+		pthread_join(table->end_thread, NULL);
 	destroy_mutexes(table);
 	free_table(table);
 }
