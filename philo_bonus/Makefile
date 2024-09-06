@@ -2,7 +2,7 @@ NAME	= philo_bonus
 CC		= cc
 CFLAGS	= -Werror -Wall -Wextra -pthread
 #CFLAGS	+= -g -O0 -fsanitize=thread
-CFLAGS	+= -g -O0 -fsanitize=address
+#CFLAGS	+= -g -O0 -fsanitize=address
 
 SRC_PATH = sources/
 OBJ_PATH = objects/

@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 20:32:34 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 22:11:29 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/07 07:47:24 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ void			routine(t_philo *philo);
 void			finish_and_exit(t_philo *philo);
 bool			is_valid_input(int ac, char **av);
 int				msg(char *str, char *detail, int exit_no);
-int				get_time_in_ms(struct timeval *time);
-void			sim_start_delay(int start_time);
+unsigned long	get_time_in_ms(struct timeval *time);
+void			sim_start_delay(unsigned long start_time);
 void			sem_cleanup(t_philo *philo);
 void			check_stomach_and_death(t_philo *philo, t_table table);
 

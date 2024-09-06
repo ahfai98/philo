@@ -6,13 +6,13 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 21:15:52 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 22:12:44 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/07 07:46:51 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-int	get_time_in_ms(struct timeval *time)
+unsigned long	get_time_in_ms(struct timeval *time)
 {
 	struct timeval		tv;
 
@@ -22,10 +22,10 @@ int	get_time_in_ms(struct timeval *time)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	sim_start_delay(int start_time)
+void	sim_start_delay(unsigned long start_time)
 {
 	while (get_time_in_ms(NULL) < start_time)
-		continue ;
+		usleep(100);
 }
 
 void	ft_usleep(int sleep_time)

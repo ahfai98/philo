@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 20:31:54 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 22:08:13 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/07 07:42:54 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ static int	init_sema(t_philo *philo, t_table table)
 	int	ret;
 
 	ret = 0;
-	ret += create_sema(&philo->fork, "fork", table.n_philos);
-	ret += create_sema(&philo->full, "full", 0);
-	ret += create_sema(&philo->write, "write", 1);
-	ret += create_sema(&philo->end, "end", 0);
+	ret += create_sema(&philo->fork, "/fork", table.n_philos);
+	ret += create_sema(&philo->full, "/full", 0);
+	ret += create_sema(&philo->write, "/write", 1);
+	ret += create_sema(&philo->end, "/end", 0);
 	return (ret);
 }
 
@@ -53,7 +53,7 @@ int	init_philo(t_philo *philo, t_table table)
 	if (init_sema(philo, table))
 		return (msg(STR_ERR_SEM, NULL, 1));
 	gettimeofday(&philo->start_time, NULL);
-	philo->start_time.tv_usec += table.n_philos * 20;
+	philo->start_time.tv_usec += table.n_philos * 20000;
 	if (philo->start_time.tv_usec >= 1000000)
 	{
 		philo->start_time.tv_sec++;

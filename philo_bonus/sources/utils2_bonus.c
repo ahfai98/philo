@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 20:32:20 by jyap              #+#    #+#             */
-/*   Updated: 2024/09/06 12:58:09 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/07 07:47:13 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,27 @@
 
 void	sem_cleanup(t_philo *philo)
 {
+	char	*philo_id;
+	char	*sem_name;
+	int		i;
+
+	i = -1;
+	while (++i < philo->table.n_philos)
+	{
+		philo_id = ft_itoa(i + 1);
+		sem_name = ft_strjoin("read", philo_id);
+		sem_unlink(sem_name);
+		free(philo_id);
+		free(sem_name);
+	}
 	sem_close(philo->end);
 	sem_close(philo->full);
 	sem_close(philo->write);
 	sem_close(philo->fork);
-	sem_unlink("end");
-	sem_unlink("full");
-	sem_unlink("write");
-	sem_unlink("fork");
+	sem_unlink("/end");
+	sem_unlink("/full");
+	sem_unlink("/write");
+	sem_unlink("/fork");
 }
 
 /* Finishes the simulation and exits the program cleanly */

@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 20:32:24 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 21:17:05 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/07 07:16:59 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ void	get_message(t_philo *philo, int i, char *str, int end)
 {
 	int	time;
 
-	time = get_time(philo->start_time);
 	sem_wait(philo->write);
+	time = get_time(philo->start_time);
 	printf("%d\t%d %s\n", time, i, str);
 	if (end != 1)
 		sem_post(philo->write);

@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 13:36:13 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 16:06:03 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/07 06:48:54 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ bool	has_sim_stopped(t_table *table)
 
 static bool	kill_philo(t_philo *philo)
 {
-	int	time;
+	unsigned long	time;
 
 	time = get_time_in_ms();
-	if ((time - philo->last_meal) >= philo->table->time_to_die)
+	if ((int)(time - philo->last_meal) >= philo->table->time_to_die)
 	{
 		set_sim_stop_flag(philo->table, true);
 		write_status(philo, true, DIED);

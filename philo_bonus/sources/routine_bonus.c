@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 20:32:16 by jyap              #+#    #+#             */
-/*   Updated: 2024/09/06 13:29:24 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/07 07:48:14 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,10 @@ static void	*check_death(void *args)
 static void	*cleanup(void *args)
 {
 	t_philo	*philo;
-	char	*sem_name;
-	char	*philo_id;
 
 	philo = args;
-	philo_id = ft_itoa(philo->n);
-	sem_name = ft_strjoin("read", philo_id);
 	sem_wait(philo->end);
 	free(philo->pid);
-	sem_unlink(sem_name);
-	free(philo_id);
-	free(sem_name);
 	usleep(1000 * philo->n);
 	sem_cleanup(philo);
 	kill(0, SIGINT);
@@ -87,11 +80,13 @@ static void	think_before_eat(t_philo *philo)
 	int	time_to_think;
 
 	sem_wait(philo->read);
-	time_to_think = (philo->table.time_to_die
-			- (get_time(philo->last_ate))) / 4;
+	time_to_think = ((int)philo->table.time_to_die
+			- (get_time(philo->last_ate)) - philo->table.time_to_eat) / 4;
 	sem_post(philo->read);
 	if (time_to_think > 200)
 		time_to_think = 200;
+	if (time_to_think < 0)
+		time_to_think = 0;
 	ft_usleep(time_to_think);
 }
 
@@ -112,7 +107,7 @@ void	routine(t_philo *philo)
 	pthread_detach(philo->cleanup_thread);
 	sim_start_delay(get_time_in_ms(&philo->start_time));
 	if (philo->n % 2 == 0)
-		ft_usleep(1);
+		ft_usleep(10);
 	while (1)
 	{
 		eat_sleep(philo);

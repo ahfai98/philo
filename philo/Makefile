@@ -1,7 +1,8 @@
 NAME	= philo
-CC		= cc
+CC		= cc 
 CFLAGS	= -Werror -Wall -Wextra -pthread
-CFLAGS	+= -g
+#CFLAGS	+= -g -O0 -fsanitize=thread
+#CFLAGS	+= -g -O0 -fsanitize=address
 
 SRC_PATH = sources/
 OBJ_PATH = objects/
