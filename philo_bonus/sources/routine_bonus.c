@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 20:32:16 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 22:13:33 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/06 13:29:24 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	*check_death(void *args)
 				sem_post(philo->end);
 			break ;
 		}
-		ft_usleep(100);
+		ft_usleep(7);
 	}
 	return (NULL);
 }
@@ -40,20 +40,19 @@ static void	*check_death(void *args)
 static void	*cleanup(void *args)
 {
 	t_philo	*philo;
-	char	*philo_id;
 	char	*sem_name;
+	char	*philo_id;
 
 	philo = args;
-	sem_wait(philo->end);
 	philo_id = ft_itoa(philo->n);
 	sem_name = ft_strjoin("read", philo_id);
-	sem_close(philo->read);
+	sem_wait(philo->end);
+	free(philo->pid);
 	sem_unlink(sem_name);
 	free(philo_id);
 	free(sem_name);
+	usleep(1000 * philo->n);
 	sem_cleanup(philo);
-	free(philo->pid);
-	usleep(1000);
 	kill(0, SIGINT);
 	return (NULL);
 }
@@ -110,7 +109,7 @@ void	routine(t_philo *philo)
 	pthread_create(&philo->death_thread, NULL, &check_death, philo);
 	pthread_detach(philo->death_thread);
 	pthread_create(&philo->cleanup_thread, NULL, &cleanup, philo);
-	pthread_detach(philo->death_thread);
+	pthread_detach(philo->cleanup_thread);
 	sim_start_delay(get_time_in_ms(&philo->start_time));
 	if (philo->n % 2 == 0)
 		ft_usleep(1);

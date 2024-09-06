@@ -6,7 +6,7 @@
 /*   By: jyap <jyap@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 20:32:20 by jyap              #+#    #+#             */
-/*   Updated: 2024/08/29 22:12:25 by jyap             ###   ########.fr       */
+/*   Updated: 2024/09/06 12:58:09 by jyap             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	check_stomach_and_death(t_philo *philo, t_table table)
 		philo->stomach_process = fork();
 		if (philo->stomach_process != 0)
 			return ;
-		while (i++ < table.n_philos)
+		while (++i < table.n_philos)
 			sem_wait(philo->full);
 		sem_wait(philo->write);
 		while (i-- > 0)
