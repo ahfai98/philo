@@ -25,6 +25,7 @@
 # include <fcntl.h> 
 # include <stdbool.h>
 # include <limits.h>
+# include <string.h>
 
 # define MAX_PHILOS	200
 # define STR_MAX_PHILOS "200"
@@ -94,6 +95,5 @@ int				msg(char *str, char *detail, int exit_no);
 unsigned long	get_time_in_ms(struct timeval *time);
 void			sim_start_delay(unsigned long start_time);
 void			sem_cleanup(t_philo *philo);
-void			check_stomach_and_death(t_philo *philo, t_table table);
-
+int				check_stomach(t_philo *philo, t_table table);
 #endif

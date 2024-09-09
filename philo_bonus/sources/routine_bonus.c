@@ -34,6 +34,7 @@ static void	*check_death(void *args)
 		}
 		ft_usleep(7);
 	}
+	pthread_join(philo->cleanup_thread, NULL);
 	return (NULL);
 }
 
@@ -43,11 +44,13 @@ static void	*cleanup(void *args)
 
 	philo = args;
 	sem_wait(philo->end);
+	sem_close(philo->read);
+	sem_close(philo->full);
+	sem_close(philo->write);
+	sem_close(philo->end);
+	sem_close(philo->fork);
 	free(philo->pid);
-	usleep(1000 * philo->n);
-	sem_cleanup(philo);
-	kill(0, SIGINT);
-	return (NULL);
+	exit(0);
 }
 
 /* Resets philosopher's last ate time and reduce its max eat by one each eat */
@@ -61,13 +64,13 @@ static void	eat_sleep(t_philo *philo)
 	gettimeofday(&philo->last_ate, NULL);
 	sem_post(philo->read);
 	get_message(philo, philo->n, "is eating", 0);
+	ft_usleep(philo->table.time_to_eat);
 	if (philo->table.must_eat_count != -2)
 	{
 		philo->table.must_eat_count--;
 		if (philo->table.must_eat_count <= 0)
 			sem_post(philo->full);
 	}
-	ft_usleep(philo->table.time_to_eat);
 	sem_post(philo->fork);
 	sem_post(philo->fork);
 	get_message(philo, philo->n, "is sleeping", 0);
@@ -93,18 +96,9 @@ static void	think_before_eat(t_philo *philo)
 /* The routine each philosopher has to go through for the rest of their lives */
 void	routine(t_philo *philo)
 {
-	char	*sem_name;
-	char	*philo_id;
-
-	philo_id = ft_itoa(philo->n);
-	sem_name = ft_strjoin("read", philo_id);
-	create_sema(&philo->read, sem_name, 1);
-	free(philo_id);
-	free(sem_name);
 	pthread_create(&philo->death_thread, NULL, &check_death, philo);
 	pthread_detach(philo->death_thread);
 	pthread_create(&philo->cleanup_thread, NULL, &cleanup, philo);
-	pthread_detach(philo->cleanup_thread);
 	sim_start_delay(get_time_in_ms(&philo->start_time));
 	if (philo->n % 2 == 0)
 		ft_usleep(10);
@@ -113,4 +107,5 @@ void	routine(t_philo *philo)
 		eat_sleep(philo);
 		think_before_eat(philo);
 	}
+	pthread_join(philo->cleanup_thread, NULL);
 }

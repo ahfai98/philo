@@ -22,7 +22,7 @@ void	sem_cleanup(t_philo *philo)
 	while (++i < philo->table.n_philos)
 	{
 		philo_id = ft_itoa(i + 1);
-		sem_name = ft_strjoin("read", philo_id);
+		sem_name = ft_strjoin("/read", philo_id);
 		sem_unlink(sem_name);
 		free(philo_id);
 		free(sem_name);
@@ -40,15 +40,23 @@ void	sem_cleanup(t_philo *philo)
 /* Finishes the simulation and exits the program cleanly */
 void	finish_and_exit(t_philo *philo)
 {
+	int	i;
+
+	i = -1;
 	waitpid(-1, NULL, 0);
+	if (philo->table.must_eat_count != -2)
+		kill(philo->stomach_process, SIGINT);
+	usleep(500);
+	while (++i < philo->table.n_philos)
+		kill(philo->pid[i], SIGINT);
 	sem_cleanup(philo);
 	free(philo->pid);
-	kill(0, SIGINT);
+	exit(0);
 }
 
 /* Waits when max_eat has reached <= 0, then finish and exit per philosopher */
 
-void	check_stomach_and_death(t_philo *philo, t_table table)
+int		check_stomach(t_philo *philo, t_table table)
 {
 	int		i;
 
@@ -56,14 +64,21 @@ void	check_stomach_and_death(t_philo *philo, t_table table)
 	if (philo->table.must_eat_count != -2)
 	{
 		philo->stomach_process = fork();
+		if (philo->stomach_process == -1)
+			return (msg(STR_ERR_FORK, NULL, 1));
 		if (philo->stomach_process != 0)
-			return ;
+			return (0);
 		while (++i < table.n_philos)
 			sem_wait(philo->full);
 		sem_wait(philo->write);
 		while (i-- > 0)
 			sem_post(philo->end);
-		usleep(100);
-		finish_and_exit(philo);
+		sem_close(philo->end);
+		sem_close(philo->full);
+		sem_close(philo->write);
+		sem_close(philo->fork);
+		usleep(500);
+		exit(0);
 	}
+	return (0);
 }

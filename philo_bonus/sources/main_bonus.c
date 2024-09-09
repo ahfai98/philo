@@ -18,6 +18,8 @@ int	main(int ac, char **av)
 	t_table	table;
 	t_philo	philo;
 
+	memset(&table, 0, sizeof(table));
+    memset(&philo, 0, sizeof(philo));
 	if (ac < 5 || ac > 6)
 		return (msg(STR_USAGE, NULL, EXIT_FAILURE));
 	if (!is_valid_input(ac, av))

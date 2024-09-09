@@ -28,9 +28,11 @@ void	init_arg(t_table *table, int ac, char **av)
 int	create_sema(sem_t **sem, char *name, int count)
 {
 	sem_unlink(name);
-	sem_close(*sem);
+	if (*sem)
+		sem_close(*sem);
 	*sem = NULL;
-	*sem = sem_open(name, O_CREAT, S_IRWXU, count);
+	*sem = sem_open(name,
+		O_CREAT, S_IRUSR | S_IWUSR, count);
 	return (*sem == SEM_FAILED);
 }
 
@@ -45,6 +47,18 @@ static int	init_sema(t_philo *philo, t_table table)
 	ret += create_sema(&philo->write, "/write", 1);
 	ret += create_sema(&philo->end, "/end", 0);
 	return (ret);
+}
+
+static void	create_read_sema(t_philo *philo)
+{
+	char	*sem_name;
+	char	*philo_id;
+
+	philo_id = ft_itoa(philo->n + 1);
+	sem_name = ft_strjoin("/read", philo_id);
+	create_sema(&philo->read, sem_name, 1);
+	free(philo_id);
+	free(sem_name);
 }
 
 /* Initializes the philosopher's value and starts the routine */
@@ -64,14 +78,16 @@ int	init_philo(t_philo *philo, t_table table)
 	philo->n = 1;
 	while (philo->n -1 < table.n_philos)
 	{
+		create_read_sema(philo);
 		philo->pid[philo->n - 1] = fork();
 		if (philo->pid[philo->n - 1] == -1)
 			return (msg(STR_ERR_FORK, NULL, 1));
 		if (philo->pid[philo->n - 1] == 0)
 			routine(philo);
+		sem_close(philo->read);
 		philo->n++;
 	}
-	check_stomach_and_death(philo, table);
+	check_stomach(philo, table);
 	finish_and_exit(philo);
 	return (0);
 }
