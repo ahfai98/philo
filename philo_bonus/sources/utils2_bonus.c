@@ -56,7 +56,7 @@ void	finish_and_exit(t_philo *philo)
 
 /* Waits when max_eat has reached <= 0, then finish and exit per philosopher */
 
-int		check_stomach(t_philo *philo, t_table table)
+int	check_stomach(t_philo *philo, t_table table)
 {
 	int		i;
 
@@ -81,4 +81,15 @@ int		check_stomach(t_philo *philo, t_table table)
 		exit(0);
 	}
 	return (0);
+}
+
+void	sim_starttime(t_philo *philo, t_table table)
+{
+	gettimeofday(&philo->start_time, NULL);
+	philo->start_time.tv_usec += table.n_philos * 200;
+	if (philo->start_time.tv_usec >= 1000000)
+	{
+		philo->start_time.tv_sec++;
+		philo->start_time.tv_usec -= 1000000;
+	}
 }

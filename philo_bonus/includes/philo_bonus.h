@@ -96,4 +96,5 @@ unsigned long	get_time_in_ms(struct timeval *time);
 void			sim_start_delay(unsigned long start_time);
 void			sem_cleanup(t_philo *philo);
 int				check_stomach(t_philo *philo, t_table table);
+void			sim_starttime(t_philo *philo, t_table table);
 #endif

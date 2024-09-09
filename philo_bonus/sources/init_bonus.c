@@ -32,7 +32,7 @@ int	create_sema(sem_t **sem, char *name, int count)
 		sem_close(*sem);
 	*sem = NULL;
 	*sem = sem_open(name,
-		O_CREAT, S_IRUSR | S_IWUSR, count);
+			O_CREAT, S_IRUSR | S_IWUSR, count);
 	return (*sem == SEM_FAILED);
 }
 
@@ -66,13 +66,7 @@ int	init_philo(t_philo *philo, t_table table)
 {
 	if (init_sema(philo, table))
 		return (msg(STR_ERR_SEM, NULL, 1));
-	gettimeofday(&philo->start_time, NULL);
-	philo->start_time.tv_usec += table.n_philos * 20000;
-	if (philo->start_time.tv_usec >= 1000000)
-	{
-		philo->start_time.tv_sec++;
-		philo->start_time.tv_usec -= 1000000;
-	}
+	sim_starttime(philo, table);
 	philo->last_ate = philo->start_time;
 	philo->table = table;
 	philo->n = 1;
